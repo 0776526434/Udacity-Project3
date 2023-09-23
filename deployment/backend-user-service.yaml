@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-user-service-udacity
+  name: backend-user
 spec:
   selector:
     app: backend-user-deployment-udacity
