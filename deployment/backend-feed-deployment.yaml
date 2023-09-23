@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-feed-deployment-udacity
+  labels:
+    app: backend-feed-deployment-udacity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-feed-deployment-udacity
+  template:
+    metadata:
+      labels:
+        app: backend-feed-deployment-udacity
+    spec:
+      containers:
+      - name: udagram-api-feed
+        image: khanght1/udagram-api-feed:v1
+        env:
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: env-secret-udacity
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: env-secret-udacity
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: env-secret-udacity
+              key: POSTGRES_DB
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: env-secret-udacity
+              key: JWT_SECRET
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: env-configmap-udacity
+              key:  POSTGRES_HOST
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-udacity
+              key: AWS_REGION
+        - name: AWS_PROFILE
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-udacity
+              key: AWS_PROFILE
+        - name: AWS_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: env-configmap-udacity
+              key:  AWS_BUCKET
+        - name: URL
+          valueFrom:
+            configMapKeyRef:
+              name: env-configmap-udacity
+              key:  URL
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-udacity
+              key: AWS_DEFAULT_REGION
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: aws-secret
+          mountPath: "/root/.aws/"
+          readOnly: true
+      restartPolicy: Always
+      volumes:
+      - name: aws-secret
+        secret:
+          secretName: aws-secret-udacity

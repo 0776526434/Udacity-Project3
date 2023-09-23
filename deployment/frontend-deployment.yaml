@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment-udacity
+  labels:
+    app: frontend-deployment-udacity
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend-deployment-udacity
+  template:
+    metadata:
+      labels:
+        app: frontend-deployment-udacity
+    spec:
+      containers:
+      - name: udagram-frontend
+        image: khanght1/udagram-frontend:v2
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "1m"
+          requests:
+            cpu: "1m"
